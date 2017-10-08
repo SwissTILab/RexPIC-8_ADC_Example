@@ -1,9 +1,25 @@
-/*****************************
-************ 2017 ************
-****** (C) Swiss TI LAB ******
-******** KEVIN CERESA ********
-**** ADC TUTORIAL EXAMPLE ****
-******************************/
+/*H**********************************************************************
+* FILENAME :        main.c            
+*
+* DESCRIPTION :
+*       ADC example for RexPIC-8 
+*
+* NOTES :
+*       Designed for PIC16F1517 (RexPIC-8)
+*       Copyright Swiss TI Lab 2017
+*       https://www.swisstilab.com/en/
+* 
+* LICENSE:
+*      CC-BY-NC-SA
+* 
+* AUTHOR :    Kevin Ceresa        START DATE :    08 Oct 2017
+*
+* CHANGES :
+*
+* REF NO    VERSION   DATE      WHO     DETAIL
+* 1         V1I1      08Oct17   KC      Final Release
+*
+*H*/
 
 #define _XTAL_FREQ 8000000 //8MHz crystal oscillator (necessary for the delay function)
 #include <xc.h>
@@ -12,7 +28,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+/*------------------------------------------------- UART_Write ------
+|  Function UART_Write
+|
+|  Purpose:  Send a character over the UART internal module 
+|
+|  Parameters:
+|      txData:  -- IN --    Char input
+|      
+|  Returns:  -
+*-------------------------------------------------------------------*/
 void UART_Write(char txData)
 {
     while(0 == PIR1bits.TXIF)
@@ -22,7 +47,16 @@ void UART_Write(char txData)
     TXREG = txData;    // Write the data byte to the USART.
 }
 
-
+/*------------------------------------------------- UART_Init ------
+|  Function UART_Init
+|
+|  Purpose:  Initialize the internal UART module 
+|
+|  Parameters:
+|      -
+|      
+|  Returns:  -
+*-------------------------------------------------------------------*/
 void UART_Init()
 {
     //RC6 output
@@ -45,8 +79,16 @@ void UART_Init()
     SPBRGH = 0x00;
 }
 
-
-
+/*------------------------------------------------- ADC_Init --------
+|  Function ADC_Init
+|
+|  Purpose:  Initialize the ADC internal module
+|
+|  Parameters:
+|      -
+|      
+|  Returns:  -
+*-------------------------------------------------------------------*/
 void ADC_Init()
 {
     /*Port Configuration*/ //Change for your case
@@ -63,6 +105,7 @@ void ADC_Init()
     
 }
 
+//Global variable
 short unsigned int adc_value;
 
 float temp_buf[10],temp;
@@ -70,6 +113,18 @@ int count;
 
 char buffer[50];
 
+/*------------------------------------------------- main ------
+|  Function Main
+|
+|  Purpose:  Initialize all module and ports. 
+|            Infinite loop:
+|               Start conversion, data elaboration, sending the data.
+|
+|  Parameters:
+|      -
+|      
+|  Returns:  -
+*-------------------------------------------------------------------*/
 void main()
 {
     //Initialize the uart module
